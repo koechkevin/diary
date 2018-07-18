@@ -1,0 +1,1 @@
+web: gunicorn myDiary_dataStructures:app
