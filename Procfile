@@ -1,1 +1,1 @@
-web: gunicorn myDiary_dataStructures:app
+web: python myDiary_dataStructures.py
