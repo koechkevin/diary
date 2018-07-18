@@ -56,6 +56,7 @@ class Test_ExternalFunctions(unittest.TestCase):
         tester= app.test_client()
         response = tester.get('/api/v1/view_entry/1')
         self.assertEqual(response.status_code, 200) 
-      
+        
+
         
      
