@@ -9,8 +9,9 @@ Clone the repository
 ```sh
 https://github.com/koechkevin/myDiary.git
 ```
-```
+
 Create a virtual environment on the directory that the cloned repository resides in
+
 I used this command to create a virtual environment
 
 ```sh
