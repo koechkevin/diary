@@ -4,7 +4,7 @@
 
 # myDiary
 myDiary is a set of API endpoints that uses data structures to store data in memory.
-you can run the file here  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2e72df446f43c421121f) 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2e72df446f43c421121f) 
 
 ### Set up the environment
 This platform APIs is built on flask python framework. You must have python installed preferably version 3
