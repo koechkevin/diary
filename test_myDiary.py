@@ -6,10 +6,10 @@ from myDiary_dataStructures import *
 from myClass import ExternalFunctions
 class Test_ExternalFunctions(unittest.TestCase):
     def test_home(self):
-        with app.test_client() as test:
-            response = test.get('/api/v1')
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(test.post('/api/v1',json={}).status_code,405)
+        test = app.test_client()
+        response = test.get('/api/v1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(test.post('/api/v1',json={}).status_code,405)
     def test_passwordVerify(self):
         self.assertTrue(ExternalFunctions.passwordVerify("kevin","kevin"),True)
         self.assertFalse(ExternalFunctions.passwordVerify("kevin","kevins"),False)
@@ -45,10 +45,12 @@ class Test_ExternalFunctions(unittest.TestCase):
         self.assertEqual(response.status_code, 405)
         self.assertEqual(app.test_client().post('/api/v1/delete_entry/3',json={}).status_code,405)
     def test_create_entry(self):
-        with app.test_client() as test:
-            response = test.get('/api/v1/create_entry')
-            self.assertEqual(response.status_code, 405)
-            self.assertEqual(test.get('/api/v1/create_entry').status_code,405)
+        test = app.test_client()
+        response = test.get('/api/v1/create_entry')
+        self.assertEqual(response.status_code, 405)
+        r=test.post('/api/v1/create_entry',json={"comment":"me"})
+        self.assertEqual(test.get('/api/v1/create_entry').status_code,405)
+        self.assertEqual(r.status_code, 200)
     def test_modify_entry(self):
         with app.test_client() as tester:
             response = tester.get('/api/v1/modify_entry/1')
@@ -59,7 +61,8 @@ class Test_ExternalFunctions(unittest.TestCase):
         response = tester.get('/api/v1/view_entry/1')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(app.test_client().post('/api/v1/view_entry/1',json={}).status_code,405)
-
+if __name__=='__main__':
+    unittest.main()
 
         
      
