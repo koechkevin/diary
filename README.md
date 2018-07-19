@@ -1,10 +1,10 @@
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2e72df446f43c421121f)
 [![Build Status](https://travis-ci.org/koechkevin/myDiary.svg?branch=challenge2)](https://travis-ci.org/koechkevin/myDiary)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Maintainability](https://api.codeclimate.com/v1/badges/184b7b2cf89a0111c784/maintainability)](https://codeclimate.com/github/koechkevin/myDiary/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/184b7b2cf89a0111c784/test_coverage)](https://codeclimate.com/github/koechkevin/myDiary/test_coverage)
+
 # myDiary
-myDiary is a set of API endpoints that uses data structures to store data in memory 
+myDiary is a set of API endpoints that uses data structures to store data in memory.
+you can run the file here  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2e72df446f43c421121f) 
 
 ### Set up the environment
 This platform APIs is built on flask python framework. You must have python installed preferably version 3
