@@ -3,7 +3,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/184b7b2cf89a0111c784/maintainability)](https://codeclimate.com/github/koechkevin/myDiary/maintainability)
 
 # myDiary
-myDiary is a set of API endpoints that uses data structures to store data in memory.
+myDiary is a set of API endpoints that uses data structures to store data in memory.<br/>
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2e72df446f43c421121f) 
 
 ### Set up the environment
