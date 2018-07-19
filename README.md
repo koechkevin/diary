@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/koechkevin/myDiary.svg?branch=master)](https://travis-ci.org/koechkevin/myDiary)
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 # myDiary
 myDiary is a set of API endpoints that uses data structures to store data in memory 
 
