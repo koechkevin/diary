@@ -22,11 +22,11 @@ class Test_ExternalFunctions(unittest.TestCase):
         "username":"kibitok","password":"1234","cpassword":\
         "1234"}).status_code,200)
     def test_login(self):
-        with app.test_client() as tester:
-            response = tester.get('/api/v1/login')
-            self.assertEqual(response.status_code, 405)
-            self.assertEqual(tester.post('/api/v1/login',json={\
-            "username":"kibitok","password":"1234"}).status_code,200) 
+        tester=app.test_client()
+        response = tester.get('/api/v1/login')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(tester.post('/api/v1/login',json={\
+        "username":"kibitok","password":"1234"}).status_code,200) 
             
     def test_entries(self):
         with app.test_client() as tester:
@@ -47,16 +47,19 @@ class Test_ExternalFunctions(unittest.TestCase):
     def test_create_entry(self):
         with app.test_client() as test:
             response = test.get('/api/v1/create_entry')
-            self.assertEqual(response.status_code, 405) 
+            self.assertEqual(response.status_code, 405)
+            self.assertEqual(test.get('/api/v1/create_entry').status_code,405)
     def test_modify_entry(self):
         with app.test_client() as tester:
             response = tester.get('/api/v1/modify_entry/1')
-            self.assertEqual(response.status_code, 405)  
+            self.assertEqual(response.status_code, 405)
+            self.assertEqual(tester.get('/api/v1/modify_entr/').status_code, 404)
     def test_view_entry(self):
         tester= app.test_client()
         response = tester.get('/api/v1/view_entry/1')
-        self.assertEqual(response.status_code, 200) 
-        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(app.test_client().post('/api/v1/view_entry/1',json={}).status_code,405)
+
 
         
      
