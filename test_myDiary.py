@@ -21,7 +21,7 @@ class Test_ExternalFunctions(unittest.TestCase):
             "fname":"kevin","lname":"koech","email":"kkkoech",\
         "username":"kibitok","password":"1234","cpassword":\
         "1234"}).status_code,200)
-        self.assertEqual(t.post('/api/v1/register',json={\
+        self.assertEqual(app.test_client().post('/api/v1/register',json={\
             "fname":"kkibitok","lname":"kevin","email":"@gmail.com",\
         "username":"kibitok","password":"12345","cpassword":\
         "12345"}).status_code,409)        
