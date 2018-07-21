@@ -23,10 +23,10 @@ def register():
         if username not in user_details:
             user_details.update({username:{"name":fname+" "+lname,"email":email,"password":password}})
         else:
-            return jsonify({"message":"such user already exists"})
+            return jsonify({"message":"such user already exists"}),409
     else:
-        return jsonify({"message":"password and confirm password do not match"})
-    return jsonify({"message":"success ! you can now login to continue"})
+        return jsonify({"message":"password and confirm password do not match"}),403
+    return jsonify({"message":"success ! you can now login to continue"}),200
     
 
 @app.route("/api/v1/login",methods=['POST'])
@@ -37,18 +37,18 @@ def login():
         if password==user_details[username]["password"]:
             session['username']= username
             session['logged_in']=True
-            return jsonify({"message":"you are successfully logged in "})
+            return jsonify({"message":"you are successfully logged in "}),200
         else:
-            return jsonify({"message":"wrong password,try again"})
+            return jsonify({"message":"wrong password,try again"}),401
     else:    
-        return jsonify({"message":"you are not a registered user"})
+        return jsonify({"message":"you are not a registered user"}),403
 def on_session(t):
     @wraps(t)
     def decorator(*args,**kwargs):
         if "logged_in" in session:
             return t(*args,**kwargs)
         else:
-            return jsonify({"message":"please login first"})
+            return jsonify({"message":"please login first"}),401
     return decorator    
 
 @app.route("/api/v1/create_entry",methods=['POST'])
@@ -60,26 +60,26 @@ def create_entry():
         diary_entries.update({username:{1:str(datetime.datetime.utcnow())+" "+comment}})
     else:
         diary_entries[username].update({len(diary_entries[username])+1:str(datetime.datetime.utcnow())+" "+comment})
-    return jsonify(diary_entries[username])
+    return jsonify(diary_entries[username]),200
 
 @app.route("/api/v1/entries",methods=['GET'])
 @on_session
 def entries():
     username=session.get('username')
-    return jsonify(diary_entries[username])
+    return jsonify(diary_entries[username]),200
 
 @app.route("/api/v1/view_entry/<int:entryID>",methods=["GET"])
 @on_session
 def view_entry(entryID):
     username=session.get('username')
-    return jsonify({"entry "+str(entryID):diary_entries[username][entryID]})
+    return jsonify({"entry "+str(entryID):diary_entries[username][entryID]}),200
 
 @app.route("/api/v1/delete_entry/<int:entryId>",methods=["DELETE"])
 @on_session
 def delete_entry(entryId):
     username=session.get('username')
     del diary_entries[username][entryId]
-    return jsonify({"message":"deleted successfully"})
+    return jsonify({"message":"deleted successfully"}),202
 
 @app.route("/api/v1/modify_entry/<int:entryId>",methods=["PUT"])
 def modify_entry(entryId):
@@ -87,19 +87,19 @@ def modify_entry(entryId):
     username=session.get('username')
     del diary_entries[username][entryId]
     diary_entries[username].update({entryId:str(datetime.datetime.utcnow())+" "+comment})
-    return jsonify({"message":"successfully edited an entry"})
+    return jsonify({"message":"successfully edited an entry"}),200
 
 @app.route("/api/v1/account",methods=['GET'])
 def account():
     username=session.get('username')
     myDetails={"name":user_details[username]['name'],"email":user_details[username]['email']}
-    return jsonify(myDetails)
+    return jsonify(myDetails),200
 
 
 @app.route("/api/v1/logout",methods=['GET'])
 def logout():
     session.clear()
-    return jsonify({"message":"successful"})
+    return jsonify({"message":"successful"}),200
 
         
 if __name__=='__main__':
