@@ -22,13 +22,10 @@ class Test_ExternalFunctions(unittest.TestCase):
         "username":"kibitok","password":"1234","cpassword":\
         "1234"}).status_code,200)
         self.assertEqual(t.post('/api/v1/register',json={\
-            "fname":"kevin","lname":"koech","email":"kkkoech",\
-        "username":"kibitok","password":"1234","cpassword":\
-        "1234"}).status_code,409)        
-        self.assertEqual(t.post('/api/v1/register',json={\
-            "fname":"kevin","lname":"koech","email":"kkkoech",\
-        "username":"kkkoech","password":"1234","cpassword":\
-        "12374"}).status_code,403)        
+            "fname":"kkibitok","lname":"kevin","email":"@gmail.com",\
+        "username":"kibitok","password":"12345","cpassword":\
+        "12345"}).status_code,409)        
+        self.assertEqual(t.post('/api/v1/registers',json={}).status_code,404)        
     def test_login(self):
         user_details.update({"kibitok":{"name":"kevin koech","email":"kkkoech","password":"1234"}})
         tester=app.test_client()
