@@ -13,12 +13,13 @@ def home():
     return jsonify({"message":"welcome to my diary"})
 @app.route("/api/v1/register",methods=['POST'])
 def register():
-    fname=request.get_json()["fname"]
-    lname=request.get_json()["lname"]
-    email=request.get_json()["email"]
-    username=request.get_json()["username"]
-    password=request.get_json()["password"]
-    cpassword=request.get_json()["cpassword"]
+    data=request.get_json()
+    fname=data["fname"]
+    lname=data["lname"]
+    email=data["email"]
+    username=data["username"]
+    password=data["password"]
+    cpassword=data["cpassword"]
     if myClass.ExternalFunctions.validEmail(email):
         if myClass.ExternalFunctions.passwordVerify(password,cpassword):
             if username not in user_details:
