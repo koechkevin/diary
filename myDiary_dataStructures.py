@@ -19,13 +19,16 @@ def register():
     username=request.get_json()["username"]
     password=request.get_json()["password"]
     cpassword=request.get_json()["cpassword"]
-    if myClass.ExternalFunctions.passwordVerify(password,cpassword):
-        if username not in user_details:
-            user_details.update({username:{"name":fname+" "+lname,"email":email,"password":password}})
+    if myClass.ExternalFunctions.validEmail(email):
+        if myClass.ExternalFunctions.passwordVerify(password,cpassword):
+            if username not in user_details:
+                user_details.update({username:{"name":fname+" "+lname,"email":email,"password":password}})
+            else:
+                return jsonify({"message":"such user already exists"}),409
         else:
-            return jsonify({"message":"such user already exists"}),409
+            return jsonify({"message":"password and confirm password do not match"}),403
     else:
-        return jsonify({"message":"password and confirm password do not match"}),403
+        return jsonify("email is invalid"),403
     return jsonify({"message":"success ! you can now login to continue"}),200
     
 

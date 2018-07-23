@@ -18,16 +18,16 @@ class Test_ExternalFunctions(unittest.TestCase):
         response = t.get('/api/v1/register')
         self.assertEqual(response.status_code, 405)
         self.assertEqual(t.post('/api/v1/register',json={\
-            "fname":"kevin","lname":"koech","email":"kkkoech",\
+            "fname":"kevin","lname":"koech","email":"kkkoech@gmail.com",\
         "username":"kibitok","password":"1234","cpassword":\
         "1234"}).status_code,200)
         self.assertEqual(app.test_client().post('/api/v1/register',json={\
-            "fname":"kkibitok","lname":"kevin","email":"@gmail.com",\
+            "fname":"kkibitok","lname":"kevin","email":"kk@gmail.com",\
         "username":"kibitok","password":"12345","cpassword":\
         "12345"}).status_code,409)        
         self.assertEqual(t.post('/api/v1/registers',json={}).status_code,404)        
     def test_login(self):
-        user_details.update({"kibitok":{"name":"kevin koech","email":"kkkoech","password":"1234"}})
+        user_details.update({"kibitok":{"name":"kevin koech","email":"kkkoech@gmail.com","password":"1234"}})
         tester=app.test_client()
         response = tester.get('/api/v1/login')
         self.assertEqual(response.status_code, 405)
