@@ -1,6 +1,6 @@
 from flask import jsonify,json,Flask,request,session
 import datetime
-import myClass
+from myClass import ExternalFunctions
 from functools import wraps
 app=Flask(__name__)
 app.config["SECRET_KEY"]='kkkoech'
@@ -21,8 +21,8 @@ def register():
         username=data["username"]
         password=data["password"]
         cpassword=data["cpassword"]
-        if myClass.ExternalFunctions.validEmail(email):
-            if myClass.ExternalFunctions.passwordVerify(password,cpassword):
+        if ExternalFunctions.validEmail(email):
+            if ExternalFunctions.passwordVerify(password,cpassword):
                 if fname.strip()=='' or lname.strip()=='' or username.strip()=='' or password.strip()=='':
                     return jsonify("fields cannot be empty"),422
                 else:
