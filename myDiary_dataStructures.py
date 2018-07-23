@@ -44,9 +44,9 @@ def login():
         return jsonify({"message":"you are not a registered user"}),403
 def on_session(t):
     @wraps(t)
-    def decorator(*args,**kwargs):
+    def decorator(*a,**kw):
         if "logged_in" in session:
-            return t(*args,**kwargs)
+            return t(*a,**kw)
         else:
             return jsonify({"message":"please login first"}),401
     return decorator    
