@@ -162,7 +162,7 @@ def entries():
     else:
         return jsonify("you are out of session")    
 
-@app.route("/api/v2/view_entry/<intentry_id>", methods=["GET"])
+@app.route("/api/v2/view_entry/<int:entry_id>", methods=["GET"])
 def view_entry(entry_id):
     if authorize(request.args.get('token')):
         try:
@@ -184,7 +184,7 @@ def view_entry(entry_id):
     else:
         return jsonify("you are out of session"), 401    
 
-@app.route("/api/v2/delete_entry/<intentry_id>", methods=["DELETE"])
+@app.route("/api/v2/delete_entry/<int:entry_id>", methods=["DELETE"])
 def delete_entry(entry_id):
     if authorize(request.args.get('token')):
         try:
@@ -209,7 +209,7 @@ def delete_entry(entry_id):
     else:
         return jsonify("you are out of session")    
 
-@app.route("/api/v2/modify_entry/<intentry_id>", methods=["PUT"])
+@app.route("/api/v2/modify_entry/<int:entry_id>", methods=["PUT"])
 def modify_entry(entry_id):
     try:
         user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
