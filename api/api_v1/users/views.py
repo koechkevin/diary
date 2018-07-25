@@ -1,15 +1,18 @@
 from flask import *
 from models import *
+from __init__ import *
 import re
 import base64
 import hashlib
+import datetime
+import jwt
 
 users = Blueprint("users", __name__)
 connection = db_model.connection
 
 #class Users():
 def authorize(token):
-    output=True
+    output = True
     if token is None or token.strip()=='':
         return False
     sql="select token from blacklist where token='"+token+"';"
@@ -52,7 +55,7 @@ def register():
             return jsonify({"message":"such user already exists"}), 409
         elif password != confirm_password:
             return jsonify({"message":"password and confirm password do not match"}), 403
-        elif not validEmail(email):
+        elif not valid_email(email):
             return jsonify("please enter a valid email"), 403
         cursor.execute(sql1)
         connection.commit()
