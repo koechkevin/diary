@@ -10,7 +10,7 @@ install:
   - pip install coverage
   - pip install nose
 scripts:
-  - python test_myDiary.py
+  - python test_my_diary.py
   - nosetests --with-coverage
 after_success:
   - coveralls
