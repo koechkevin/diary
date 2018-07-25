@@ -1,6 +1,10 @@
 from flask import *
+from models import *
+from __init__ import *
+import jwt
 
 apps = Blueprint("entries", __name__)
+connection = db_model.connection
 
 #class Entries():
 def authorize(token):
@@ -10,16 +14,12 @@ def authorize(token):
     sql = "select token from blacklist where token='"+token+"';"
     cursor = connection.cursor()
     cursor.execute(sql)
-    resultS = cursor.fetchall()
-    for each in resultSet:
+    result = cursor.fetchall()
+    for each in result:
         if each[0] == token:
             output = False
     return output
-
-def valid_email(email):
-    if re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) != None:
-        return True
-    return False    
+   
 # creates user entries
 @apps.route('/api/v2/entries/create_entry', methods=['POST'])
 def post_entry():
@@ -117,6 +117,7 @@ def modify_entry(entryId):
         return jsonify('provide new title and new entry to replace'), 422
     except jwt.InvalidTokenError:
         return jsonify('invalid token please login to get a new token')
+    
     # a user can delete his entry
 @apps.route("/api/v2/entries/delete_entry/<int:entry_id>", methods=["DELETE"])
 def delete_entry(entry_id):
@@ -126,7 +127,7 @@ def delete_entry(entry_id):
             cursor = connection.cursor()
             sql1 = "select * from entries where entryid = "+str(entry_id)+";"
             sql = "delete from entries \
-            where entryid = "+str(entry_id)+" and id = "+str(userI_id)+";"
+            where entryid = "+str(entry_id)+" and id = "+str(user_id)+";"
             cursor.execute(sql1)
             result = cursor.fetchone()
             if result is None:
