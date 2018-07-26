@@ -6,6 +6,7 @@ app.secret_key = 'koech'
 from users.views import users
 from entries.views import apps
 from routes import main
+from users.views import Users
 
 import jwt
 
