@@ -8,13 +8,6 @@ from __init__ import *
 
 
 class TestUsers(unittest.TestCase):
-    """def test_authorize(self):
-        self.assertTrue(Users.authorize('dfghjjertyui.rffdd.eeas'), True)
-       
-    def test_valid_email(self):
-        self.assertTrue(Users.valid_email('koechkevin@gmail.com'), True)
-        self.assertFalse(valid_email('koechkevingmail@.com'), False)
-       """
     def test_register(self):  
         self.assertEqual\
             (app.test_client().get('/api/v2/users/register').status_code, 405)

@@ -3,11 +3,12 @@ import hashlib
 import re
 import base64
 import jwt
-
+import os,sys
+sys.path.insert(0, os.path.abspath(".."))
 from flask import *
 from models import *
 from __init__ import *
-
+from functools import wraps
 
 users = Blueprint("users", __name__)
 connection = DatabaseModel.connection
@@ -15,6 +16,7 @@ connection = DatabaseModel.connection
 class Users():
     def __init__(self):
         pass
+    
     def authorize(token):
         output = True
         if token is None or token.strip() == '':
@@ -32,6 +34,20 @@ class Users():
         if re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) != None:
             return True
         return False
+    
+    def on_session(t):
+        @wraps(t)
+        def auth(*args, **kwargs):
+            if not Users.authorize(request.args.get('token')):
+                return jsonify("you are out of session")
+            try:
+                data = jwt.decode(request.args.get('token'), "koech")
+            except jwt.ExpiredSignatureError:
+                return jsonify('your token expired please login again')
+            except jwt.InvalidTokenError:
+                return jsonify('invalid token please login to get a new token')
+            return t(*args, **kwargs)
+        return auth
     
     @users.route('/api/v2/users/register', methods=['POST'])
     def register():
@@ -54,9 +70,13 @@ class Users():
             ('"+fname+" "+lname+"', '"+email+"',\
             '"+username+"', '"+password+"');"
             cursor.execute("select * from users where username = '"+username+"';")
-            if cursor.fetchone() is not None:
+            result = cursor.fetchone()
+            cur = connection.cursor()
+            cur.execute("select * from users where email = '"+email+"';")
+            res = cur.fetchone()
+            if result is not None or res is not None:
                 connection.commit()
-                return jsonify({"message":"such user already exists"}), 409
+                return jsonify("email or username already exists"), 409
             elif password != confirm_password:
                 return jsonify({"message":"password and confirm password do not match"}), 403
             elif not Users.valid_email(email):
@@ -66,6 +86,7 @@ class Users():
             return jsonify({"message":"You registered succesfully"}), 200
         except KeyError:
             return jsonify('fname, lname, email, username, password, cpassword should be provided'), 422
+        
         
     @users.route('/api/v2/users/login', methods=['POST'])
     def login():
@@ -89,28 +110,23 @@ class Users():
             return jsonify('username and password should be provided in a json format'), 422
         
     @users.route("/api/v2/users/account", methods=['GET'])
+    @on_session
     def account():
-        if Users.authorize(request.args.get('token')):
-            try:
-                user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
-                sql = "select * from users where id = "+str(user_id)+";"
-                cursor = connection.cursor()
-                cursor.execute(sql)
-                result = cursor.fetchone()
-                name = result[1]
-                email = result[2]
-                username = result[3]
-                output = {"name":name, "email":email, "username":username, "ID":user_id}
-                connection.commit()
-                return jsonify(output), 200
-            except jwt.ExpiredSignatureError:
-                return jsonify('your token expired please login again')
-            except jwt.InvalidTokenError:
-                return jsonify('invalid token please login to get a new token')        
-        else:
-            return jsonify("you are out of session")        
+        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+        sql = "select * from users where id = "+str(user_id)+";"
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        name = result[1]
+        email = result[2]
+        username = result[3]
+        output = {"name":name, "email":email, "username":username, "ID":user_id}
+        connection.commit()
+        return jsonify(output), 200        
+                
         
     @users.route("/api/v2/users/logout", methods=['GET'])
+    @on_session
     def logout():
         try:
             token = request.args.get('token')
