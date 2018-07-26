@@ -1,14 +1,16 @@
+import datetime
+import hashlib
+import re
+import base64
+import jwt
+
 from flask import *
 from models import *
 from __init__ import *
-import re
-import base64
-import hashlib
-import datetime
-import jwt
+
 
 users = Blueprint("users", __name__)
-connection = db_model.connection
+connection = DatabaseModel.connection
 
 class Users():
     def __init__(self):
@@ -70,18 +72,18 @@ class Users():
         try:
             username = request.get_json()['username']
             password = hashlib.sha256(base64.b64encode\
-            (bytes(request.get_json()['password'],'utf-8'))).hexdigest()
-            payload={}    
+            (bytes(request.get_json()['password'], 'utf-8'))).hexdigest()
+            payload = {}
             sql = "select * from users where username='"+username+"' and password ='"+password+"';"
             cursor = connection.cursor()
             cursor.execute(sql)
             result = cursor.fetchone()
             if result is None:
-                return jsonify({"message":"invalid credentials"}),401
+                return jsonify({"message":"invalid credentials"}), 401
             payload = {"user_id":result[0], "username":username, \
                      "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}
             connection.commit()
-            token = jwt.encode(payload,app.secret_key)
+            token = jwt.encode(payload, app.secret_key)
             return jsonify({"token":token.decode('utf-8')}), 200
         except KeyError:
             return jsonify('username and password should be provided in a json format'), 422

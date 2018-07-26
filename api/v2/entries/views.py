@@ -6,7 +6,7 @@ import datetime
 import jwt
 
 apps = Blueprint("entries", __name__)
-connection = db_model.connection
+connection = DatabaseModel.connection
 
 class Entries():
     def authorize(token):
