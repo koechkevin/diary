@@ -1,6 +1,7 @@
-# diary
+[![Build Status](https://travis-ci.org/koechkevin/myDiary.svg?branch=challenge3)](https://travis-ci.org/koechkevin/myDiary)
+# Diary
 
-myDiary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
+Diary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
 
 ### Set up the environment
 This platform APIs is built on flask python framework.
@@ -11,7 +12,7 @@ Clone the repository and checkout to branch challenge3
 https://github.com/koechkevin/myDiary.git
 ```
 In the path ``` api/v2/models.py ```, make the changes on the line that corresponds to your database connection. The application will create tables for you.
-```
+
 Create a virtual environment on the directory that the cloned repository resides in
 I used this command to create a virtual environment
 
