@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/koechkevin/myDiary.svg?branch=challenge3)](https://travis-ci.org/koechkevin/myDiary)
+[![Build Status](https://travis-ci.org/koechkevin/myDiary.svg?branch=challenge3)](https://travis-ci.org/koechkevin/diary)
 # Diary
 
 Diary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
