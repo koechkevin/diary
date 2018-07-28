@@ -34,7 +34,7 @@ pip install requirements
 ### Run the application
 
 ```sh
-python myDiary_dataStructures.py
+python run.py
 ```
 ### APIs Endpoints
 
