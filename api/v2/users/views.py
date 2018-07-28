@@ -10,48 +10,14 @@ from models import *
 from __init__ import *
 from functools import wraps
 from flask_restful import Api, Resource
+from common import Common
 
 users = Blueprint("users", __name__)
 api = Api(users)
 
+
 connection = DatabaseModel.connection
 
-class Users():
-    def __init__(self):
-        pass
-    
-    def authorize(self, token):
-        output = True
-        if token is None or token.strip() == '':
-            return False
-        sql = "select token from blacklist where token='"+token+"';"
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        for each in result:
-            if each[0] == token:
-                output = False
-        return output
-    
-    def valid_email(self, email):
-        if re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) != None:
-            return True
-        return False
-    
-    def on_session(t):
-        @wraps(t)
-        
-        def auth(*args, **kwargs):
-            if not Users().authorize(request.args.get('token')):
-                return jsonify("you are out of session")
-            try:
-                data = jwt.decode(request.args.get('token'), "koech")
-            except jwt.ExpiredSignatureError:
-                return jsonify('your token expired please login again')
-            except jwt.InvalidTokenError:
-                return jsonify('invalid token please login to get a new token')
-            return t(*args, **kwargs)
-        return auth
     
 class UserLogin(Resource):
     def post(self):
@@ -76,7 +42,7 @@ class UserLogin(Resource):
         return jsonify({"token":token.decode('utf-8')})
  
 class UserLogout(Resource):   
-    @Users.on_session
+    @Common.on_session
     def get(self):
         try:
             token = request.args.get('token')
@@ -106,7 +72,7 @@ class UserRegister(Resource):
         except KeyError:
             abort(422)
             return jsonify('fname, lname, email, username, password, cpassword should be provided')         
-        if fname.strip() == '' or lname.strip() == '' or password.strip() == '':
+        if fname.strip() == '' or lname.strip() == '' or password.strip() == '' or username.strip() == '':
             return jsonify('Fields cannot be empty')
         cursor = connection.cursor()
         sql1 = "INSERT INTO users \
@@ -124,14 +90,14 @@ class UserRegister(Resource):
             return jsonify("email or username already exists")
         elif password != confirm_password:
                 return jsonify({"message":"password and confirm password do not match"})
-        elif not Users().valid_email(email):
-            abort(409)
+        elif not Common().valid_email(email):
+            #abort(406)
             return jsonify("please enter a valid email")
         cursor.execute(sql1)
         connection.commit()
         return jsonify({"message":"You registered succesfully"})
         
-    @Users.on_session    
+    @Common.on_session    
     def get(self):
         user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
         sql = "select * from users where id = "+str(user_id)+";"

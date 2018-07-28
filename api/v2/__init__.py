@@ -6,7 +6,7 @@ app.secret_key = 'koech'
 from users.views import users
 from entries.views import apps
 from routes import main
-from users.views import Users
+#from users.views import Users
 
 import jwt
 
@@ -15,3 +15,4 @@ import jwt
 app.register_blueprint(users)
 app.register_blueprint(apps)
 app.register_blueprint(main)
+

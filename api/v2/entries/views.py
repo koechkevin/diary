@@ -8,46 +8,16 @@ from flask import *
 from models import *
 from __init__ import *
 from flask_restful import Api, Resource
+from common import Common
 
 apps = Blueprint("entries", __name__)
 api = Api(apps)
 
 connection = DatabaseModel.connection
 
-class Entries():
-    def authorize(self, token):
-        output = True
-        if token is None or token.strip() == '':
-            return False
-        sql = "select token from blacklist where token='"+token+"';"
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        for each in result:
-            if each[0] == token:
-                output = False
-        return output
-       
-    def on_session(t):
-        @wraps(t)
-        def auth(*args, **kwargs):
-            if not Entries().authorize(request.args.get('token')):
-                abort(401)
-                return jsonify({"message":"you are out of session"})
-            try:
-                data = jwt.decode(request.args.get('token'), "koech")
-            except jwt.ExpiredSignatureError:
-                abort(401)
-                return jsonify('your token expired please login again')
-            except jwt.InvalidTokenError:
-                abort(401)
-                return jsonify('invalid token please login to get a new token')
-            return t(*args, **kwargs)
-        return auth
-    
 class CreateEntry(Resource):
     #create an entry
-    @Entries.on_session
+    @Common.on_session
     def post(self):
         try:
             data = request.get_json()
@@ -67,7 +37,7 @@ class CreateEntry(Resource):
         return jsonify("entry was successfully saved")
     
     #get all entries
-    @Entries.on_session
+    @Common.on_session
     def get(self):
         user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
         sql = "select * from entries where id = "+str(user_id)+";"
@@ -84,7 +54,7 @@ class CreateEntry(Resource):
 class EntryId(Resource):
                 
      #modify an entry      
-    @Entries.on_session
+    @Common.on_session
     def put(self, entry_id):
         try:
             user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
@@ -95,7 +65,7 @@ class EntryId(Resource):
         if title.strip() == '' or entry.strip() == '':
             return jsonify('title and entry cannot be empty')
         today = str(datetime.datetime.today()).split()
-        if Entries().authorize(request.args.get('token')):
+        if Common().authorize(request.args.get('token')):
             cursor = connection.cursor()
             sqlcheck = "select * from entries where entryid="+str(entry_id)+";"
             cursor.execute(sqlcheck)
@@ -112,7 +82,7 @@ class EntryId(Resource):
         return jsonify("you are out of session")
      
      #delete an entry
-    @Entries.on_session           
+    @Common.on_session           
     def delete(self, entry_id):
         user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
         cursor = connection.cursor()
@@ -130,7 +100,7 @@ class EntryId(Resource):
         return jsonify("delete successful")
     
     #get one entry
-    @Entries.on_session
+    @Common.on_session
     def get(self, entry_id):
         user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
         sql = "select * from entries \
