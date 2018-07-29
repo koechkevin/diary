@@ -19,22 +19,26 @@ class CreateEntry(Resource):
     #create an entry
     @Common.on_session
     def post(self):
+        message = ''
         try:
             data = request.get_json()
             title = data['title']
             entry = data['entry']
         except KeyError:
             abort(422)
-            return jsonify('provide title and entry to be saved')
+            message = 'provide title and entry to be saved'
+            
         if title.strip() == '' or entry.strip() == '':
-            return jsonify('title and entry cannot be empty')
-        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
-        cursor = connection.cursor()
-        sql = "insert into entries \
-        (title,entry,id)values('"+title+"','"+entry+"','"+str(user_id)+"');"
-        cursor.execute(sql)
-        connection.commit()
-        return jsonify("entry was successfully saved")
+            message = 'title and entry cannot be empty'
+        else:    
+            user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+            cursor = connection.cursor()
+            sql = "insert into entries \
+            (title,entry,id)values('"+title+"','"+entry+"','"+str(user_id)+"');"
+            cursor.execute(sql)
+            connection.commit()
+            message = "entry was successfully saved"
+        return jsonify(message)
     
     #get all entries
     @Common.on_session

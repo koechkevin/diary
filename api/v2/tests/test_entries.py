@@ -10,12 +10,12 @@ class TestCreateEntry(unittest.TestCase):
     def test_post(self):
         with app.test_client() as test:
             response = test.post('/api/v2/entries', json={})
-            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.status_code, 200)
             
     def test_get(self):
         with app.test_client() as test:
             response = test.get('/api/v2/entries?token= ')
-            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.status_code, 200)
      
 class TestEntryId(unittest.TestCase):
     def test_put(self):
@@ -28,11 +28,11 @@ class TestEntryId(unittest.TestCase):
             r = test.get('/api/v2/entries/delete_entry').status_code
             self.assertEqual(r, 404)    
             response = test.delete('/api/v2/entries/3')
-            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.status_code, 200)
             
     def test_get(self):
         test = app.test_client()
-        self.assertEqual(test.get('/api/v2/entries/8').status_code, 401)        
+        self.assertEqual(test.get('/api/v2/entries/8').status_code, 200)        
     
     
             

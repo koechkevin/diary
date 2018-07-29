@@ -1,22 +1,23 @@
 import unittest
 import json
-import requests
+#import request
 
 import os,sys
 #sys.path.append('../')
 sys.path.insert(0, os.path.abspath(".."))
+from common import Common
 from users import *
 from __init__ import *
 
 
 class TestUsers(unittest.TestCase):
     def test_authorize(self):
-        test = Users()
+        test = Common()
         self.assertFalse(test.authorize(''), False)
         self.assertTrue(test.authorize('qwsdfgiujhgfde'), True)
         
     def test_valid_email(self):
-        test = Users()
+        test = Common()
         self.assertTrue(test.valid_email('koechkevin92@gmail.com'), True)
         self.assertFalse(test.valid_email('koechkevin92@gmailcom'), False)
         

@@ -57,6 +57,10 @@ class UserLogout(Resource):
             return jsonify('you can only logout if you were logged in')
         
 class UserRegister(Resource):
+    def valid_password(self, password):
+        if re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password):
+            return True
+        return False
     def post(self):
         try:
             connection.commit()
@@ -65,14 +69,17 @@ class UserRegister(Resource):
             lname = data['lname']
             email = data['email']
             username = data['username']
+            raw_pass = data['password']
+            if not UserRegister().valid_password(raw_pass):
+                return jsonify('password should be 8 characters long with both numbers and letters')
             password = hashlib.sha256(base64.b64encode\
-            (bytes(data['password'], 'utf-8'))).hexdigest()
+            (bytes(raw_pass, 'utf-8'))).hexdigest()
             confirm_password = hashlib.sha256(base64.b64encode\
             (bytes(data['cpassword'], 'utf-8'))).hexdigest()
         except KeyError:
             abort(422)
             return jsonify('fname, lname, email, username, password, cpassword should be provided')         
-        if fname.strip() == '' or lname.strip() == '' or password.strip() == '' or username.strip() == '':
+        if fname.strip() == '' or lname.strip() == '' or username.strip() == '':
             return jsonify('Fields cannot be empty')
         cursor = connection.cursor()
         sql1 = "INSERT INTO users \
@@ -111,6 +118,6 @@ class UserRegister(Resource):
         connection.commit()
         return jsonify(output)
 
-api.add_resource(UserLogin, '/api/v2/users/login')
-api.add_resource(UserLogout, '/api/v2/users/logout')
-api.add_resource(UserRegister, '/api/v2/users/register')
+api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogout, '/logout')
+api.add_resource(UserRegister, '/register')
