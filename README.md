@@ -36,6 +36,7 @@ pip install requirements
 ```sh
 python run.py
 ```
+and test the endpoints on postman. The links are provided here [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2c5b74363b5b33a5c0ad)
 ### APIs Endpoints
 
 **`GET "/api/v2"`** *home page*
