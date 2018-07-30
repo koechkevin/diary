@@ -12,7 +12,7 @@ import jwt
 
 
 
-app.register_blueprint(users, url_prefix='/api/v2/users')
+app.register_blueprint(users)
 app.register_blueprint(apps)
-app.register_blueprint(main, url_prefix='/api/v2')
+app.register_blueprint(main)
 

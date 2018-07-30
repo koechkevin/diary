@@ -1,3 +1,10 @@
+from flask import jsonify, request, Flask, Blueprint
+from models import *
+from __init__ import *
+from functools import wraps
+from flask_restful import Api, Resource
+from common import Common
+
 import datetime
 import hashlib
 import re
@@ -5,12 +12,6 @@ import base64
 import jwt
 import os,sys
 sys.path.insert(0, os.path.abspath(".."))
-from flask import *
-from models import *
-from __init__ import *
-from functools import wraps
-from flask_restful import Api, Resource
-from common import Common
 
 users = Blueprint("users", __name__)
 api = Api(users)
@@ -118,6 +119,6 @@ class UserRegister(Resource):
         connection.commit()
         return jsonify(output)
 
-api.add_resource(UserLogin, '/login')
-api.add_resource(UserLogout, '/logout')
-api.add_resource(UserRegister, '/register')
+api.add_resource(UserLogin, '/api/v2/users/login')
+api.add_resource(UserLogout, '/api/v2/users/logout')
+api.add_resource(UserRegister, '/api/v2/users/register')
