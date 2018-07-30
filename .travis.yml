@@ -11,8 +11,6 @@ install:
   - pip install coverage
   - pip install nose
 scripts:
-  - python test_entries.py
-  - python test_users.py
   - nosetests --with-coverage
 after_success:
   - coveralls
