@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(".."))
 app = Flask(__name__)
 app.secret_key = 'koech'
 
-from views import user
+from users.views import user
 from entries.views import apps
 from routes import main
 #from users.views import Users
