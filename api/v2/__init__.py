@@ -1,4 +1,6 @@
 from flask import Flask
+import os,sys
+sys.path.insert(0, os.path.abspath(".."))
 
 app = Flask(__name__)
 app.secret_key = 'koech'
