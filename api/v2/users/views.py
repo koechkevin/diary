@@ -1,4 +1,4 @@
-from flask import jsonify, request, Flask, Blueprint
+from flask import jsonify, request, Flask, Blueprint, make_response, abort
 from models import *
 from __init__ import *
 from functools import wraps
@@ -14,7 +14,7 @@ import os,sys
 sys.path.insert(0, os.path.abspath(".."))
 
 user = Blueprint("users", __name__)
-api = Api(users)
+api = Api(user)
 
 
 connection = DatabaseModel.connection
