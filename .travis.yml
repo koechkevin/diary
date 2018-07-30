@@ -1,16 +1,12 @@
 language: python
-
 python:
+# only test against versions: 
   - "3.4"
   - "3.5"
+  - "3.5-dev" # 3.5 development branch
   - "3.6"
-  
-install:
-  - pip install -r requirements.txt
-  - pip install python-coveralls
-  - pip install coverage
-  - pip install nose
-scripts:
-  - nosetests --with-coverage
-after_success:
-  - coveralls
+  - "3.6-dev" # 3.6 development branch
+# command to install dependencies
+install: "pip install -r requirements.txt"
+# command to run tests
+script: pytest api/v2
