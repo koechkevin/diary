@@ -13,7 +13,7 @@ import jwt
 import os,sys
 sys.path.insert(0, os.path.abspath(".."))
 
-users = Blueprint("users", __name__)
+user = Blueprint("users", __name__)
 api = Api(users)
 
 
