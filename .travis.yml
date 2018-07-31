@@ -9,12 +9,13 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
   - pip install coveralls
+  - pip install pytest-cov
 before_script:
   - cd api/v2/tests
   - psql -c 'create database mydiary;' -U postgres
 script: 
   - pytest
-  - pytest --cov=api/v2/tests
+  - coverage run --source=api/v2/tests -m pytest && coverage report
 after_success:
   - coveralls  
 
