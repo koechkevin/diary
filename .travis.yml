@@ -8,8 +8,11 @@ python:
   - "3.6-dev" # 3.6 development branch
 # command to install dependencies
 install: "pip install -r requirements.txt"
-
+before_script:
+  - cd API/api/v2/tests
+  - psql -c 'create database diary;' -U postgres
 script: 
-  - python -m unittest discover -v
+  - pytest
+  - - pytest --cov=api/v2
 
  
