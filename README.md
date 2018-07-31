@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/koechkevin/diary.svg?branch=challenge3)](https://travis-ci.org/koechkevin/diary)
+[![Coverage Status](https://coveralls.io/repos/github/koechkevin/diary/badge.svg?branch=challenge3)](https://coveralls.io/github/koechkevin/diary?branch=challenge3)
 # Diary
 
 Diary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
