@@ -9,4 +9,4 @@ from models import DatabaseModel
 
 if __name__ == '__main__':
     DatabaseModel.create_table()
-    app.run(port=5003, debug=True)
+    app.run(port=5013, debug=True)
