@@ -30,10 +30,10 @@ class Common():
         @wraps(t)
         
         def auth(*args, **kwargs):
-            if not Common().authorize(request.args.get('token')):
+            if not Common().authorize(request.headers.get('x-access-token')):
                 return jsonify("you are out of session")
             try:
-                data = jwt.decode(request.args.get('token'), "koech")
+                data = jwt.decode(request.headers.get('x-access-token'), "koech")
             except jwt.ExpiredSignatureError:
                 return jsonify('your token expired please login again')
             except jwt.InvalidTokenError:

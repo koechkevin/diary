@@ -1,6 +1,6 @@
 import unittest
 import json
-import json
+
 import os,sys
 sys.path.insert(0, os.path.abspath(".."))
 from entries import *

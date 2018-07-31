@@ -5,13 +5,14 @@ from functools import wraps
 from flask_restful import Api, Resource
 from common import Common
 
+import os,sys
+sys.path.insert(0, os.path.abspath(".."))
 import datetime
 import hashlib
 import re
 import base64
 import jwt
-import os,sys
-sys.path.insert(0, os.path.abspath(".."))
+
 
 user = Blueprint("users", __name__)
 api = Api(user)
@@ -46,7 +47,7 @@ class UserLogout(Resource):
     @Common.on_session
     def get(self):
         try:
-            token = request.args.get('token')
+            token = request.headers.get('x-access-token')
             clear = "DELETE FROM blacklist WHERE time < NOW() - INTERVAL '30 minutes';"
             sql = " INSERT INTO blacklist(token)VALUES ('"+token+"');"
             cursor = connection.cursor()
@@ -107,7 +108,7 @@ class UserRegister(Resource):
         
     @Common.on_session    
     def get(self):
-        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+        user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from users where id = "+str(user_id)+";"
         cursor = connection.cursor()
         cursor.execute(sql)

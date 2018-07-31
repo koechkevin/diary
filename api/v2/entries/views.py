@@ -3,7 +3,7 @@ import os,sys
 sys.path.insert(0, os.path.abspath(".."))
 import jwt
 
-from flask import jsonify, request, Flask, Blueprint
+from flask import jsonify, request, Flask, Blueprint, abort
 from models import *
 from __init__ import *
 from flask_restful import Api, Resource
@@ -34,7 +34,7 @@ class CreateEntry(Resource):
         if title.strip() == '' or entry.strip() == '':
             message = 'title and entry cannot be empty'
         else:    
-            user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+            user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
             cursor = connection.cursor()
             sql = "insert into entries \
             (title,entry,id)values('"+title+"','"+entry+"','"+str(user_id)+"');"
@@ -46,7 +46,7 @@ class CreateEntry(Resource):
     #get all entries
     @Common.on_session
     def get(self):
-        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+        user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from entries where id = "+str(user_id)+";"
         cursor = connection.cursor()
         output = []
@@ -64,7 +64,7 @@ class EntryId(Resource):
     @Common.on_session
     def put(self, entry_id):
         try:
-            user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+            user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
             title = request.get_json()['title']
             entry = request.get_json()['entry']
         except KeyError:
@@ -72,7 +72,7 @@ class EntryId(Resource):
         if title.strip() == '' or entry.strip() == '':
             return jsonify('title and entry cannot be empty')
         today = str(datetime.datetime.today()).split()
-        if Common().authorize(request.args.get('token')):
+        if Common().authorize(request.headers.get('x-access-token')):
             cursor = connection.cursor()
             sqlcheck = "select * from entries where entryid="+str(entry_id)+";"
             cursor.execute(sqlcheck)
@@ -91,7 +91,7 @@ class EntryId(Resource):
      #delete an entry
     @Common.on_session           
     def delete(self, entry_id):
-        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+        user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         cursor = connection.cursor()
         sql1 = "select * from entries where entryid = "+str(entry_id)+";"
         sql = "delete from entries \
@@ -109,7 +109,7 @@ class EntryId(Resource):
     #get one entry
     @Common.on_session
     def get(self, entry_id):
-        user_id = jwt.decode(request.args.get('token'), app.secret_key)['user_id']
+        user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from entries \
         where entryid = "+str(entry_id)+" and id = "+str(user_id)+";"
         cursor = connection.cursor()
