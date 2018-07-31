@@ -4,6 +4,7 @@
 # Diary
 
 Diary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
+you can find the documentation here https://diary8.docs.apiary.io/
 
 ### Set up the environment
 This platform APIs is built on flask python framework.
@@ -11,7 +12,7 @@ You must have python installed preferably version 3 and have PostgreSQL installe
 
 Clone the repository and checkout to branch challenge3
 ```sh
-https://github.com/koechkevin/myDiary.git
+https://github.com/koechkevin/diary.git
 ```
 In the path ``` api/v2/models.py ```, make the changes on the line that corresponds to your database connection. The application will create tables for you.
 
@@ -60,3 +61,4 @@ and test the endpoints on postman. The links are provided here [![Run in Postman
 **`GET /api/v2/users/register`** *Get account details of user on session*
 
 **`GET /api/v2/users/logout`** *Gets user on session out of session*
+
