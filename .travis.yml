@@ -9,7 +9,7 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 before_script:
-  - cd api\v2\tests
+  - cd tests
 script: 
   - python -m unittest 
  
