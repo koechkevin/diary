@@ -13,7 +13,7 @@ before_script:
   - psql -c 'create database mydiary;' -U postgres
 script: 
   - pytest
-  - py.test --cov=api/v2/tests
+  
 after_success:
   - coveralls  
 
