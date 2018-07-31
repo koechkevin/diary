@@ -6,7 +6,7 @@ import os,sys
 #sys.path.append('../')
 sys.path.insert(0, os.path.abspath(".."))
 from common import Common
-from users import *
+#from users.views import user
 from __init__ import *
 
 

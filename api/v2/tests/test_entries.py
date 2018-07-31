@@ -3,7 +3,7 @@ import json
 
 import os,sys
 sys.path.insert(0, os.path.abspath(".."))
-from entries import *
+#from entries import *
 from __init__ import *
 
 class TestCreateEntry(unittest.TestCase):
