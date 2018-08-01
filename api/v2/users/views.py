@@ -136,7 +136,7 @@ class UserRegister(Resource):
         username = result[3]
         output = {"name":name, "email":email, "username":username, "ID":user_id}
         connection.commit()
-        return jsonify({"message":output})
+        return jsonify(output)
 api.add_resource(UserLogin, '/api/v2/users/login')
 api.add_resource(UserLogout, '/api/v2/users/logout')
 api.add_resource(UserRegister, '/api/v2/users/register')

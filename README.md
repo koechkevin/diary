@@ -34,11 +34,11 @@ pip install -r requirements.txt
 ### Set up your database variables and export
 on a windows OS,
 ```sh
-set db_name=your database name
+set DBNAME=your database name
 
-set db_user=your username on your host
+set DBUSER=your username on your host
 
-set db_pwd=your password
+set DBPWD=your password
 ```
 ### Run the application
 

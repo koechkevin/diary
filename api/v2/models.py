@@ -7,9 +7,9 @@ import os
 class DatabaseModel():
     """this class contains database structure for the application
     """
-    DBNAME = os.getenv('db_name')
-    DBPWD = os.getenv('db_pwd')
-    DBUSER = os.getenv('db_user')
+    DBNAME = os.getenv('DBNAME')
+    DBPWD = os.getenv('DBPWD')
+    DBUSER = os.getenv('DBUSER')
     connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
     host='localhost', password=DBPWD, port="5432")
     def create_table():

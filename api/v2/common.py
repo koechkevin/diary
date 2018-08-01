@@ -45,12 +45,12 @@ defines decorator to authorise a user on session
         @wraps(t)
         def auth(*args, **kwargs):
             if not Common().authorize(request.headers.get('x-access-token')):
-                return jsonify("you are out of session")
+                return jsonify({"message":"you are out of session"})
             try:
                 jwt.decode(request.headers.get('x-access-token'), "koech")
             except jwt.ExpiredSignatureError:
-                return jsonify('your token expired please login again')
+                return jsonify({"message":'your token expired please login again'})
             except jwt.InvalidTokenError:
-                return jsonify('invalid token please login to get a new token')
+                return jsonify({"message":'invalid token please login to get a new token'})
             return t(*args, **kwargs)
         return auth

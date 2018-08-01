@@ -58,13 +58,13 @@ class CreateEntry(Resource):
         user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
         sql = "select * from entries where id = "+str(user_id)+";"
         cursor = connection.cursor()
-        output = []
+        output = {}
         cursor.execute(sql)
         result = cursor.fetchall()
         for each in result:
-            output.append([str(each[0]), each[1], each[2], str(each[4])])
+            output.update({str(each[0]):{"title":each[1], "entry":each[2], "date created":str(each[4])}})
         connection.commit()
-        return jsonify({"message":output})
+        return jsonify(output)
 class EntryId(Resource):
     """
     class for routes /api/v2/entries/<int:entry_id>
