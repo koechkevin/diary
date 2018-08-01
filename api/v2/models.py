@@ -1,12 +1,17 @@
 """this module contains functions for database connection and create tables for the application
     """
 import psycopg2
+import os
+
 
 class DatabaseModel():
     """this class contains database structure for the application
     """
-    connection = psycopg2.connect(dbname='mydiary', user='postgres', \
-    host='localhost', password='01071992', port="5432")
+    DBNAME = os.getenv('db_name')
+    DBPWD = os.getenv('db_pwd')
+    DBUSER = os.getenv('db_user')
+    connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
+    host='localhost', password=DBPWD, port="5432")
     def create_table():
         """this function gets called in the main function of the run.py \
     files. It creates necessary tables for the project.

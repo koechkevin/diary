@@ -2,12 +2,14 @@
 module contains functions that are  shared by views
 """
 from functools import wraps
+
 import re
 import jwt
 from flask import request, Flask, jsonify
 from models import DatabaseModel
 
 connection = DatabaseModel.connection
+
 class Common():
     """
 class contains all required methods
