@@ -4,7 +4,7 @@
 # Diary
 
 Diary is a set of API endpoints that uses databases to store data implemented in PostgreSQL 
-you can find the documentation here https://diary8.docs.apiary.io/
+you can find the documentation [here https://diary8.docs.apiary.io/
 
 ### Set up the environment
 This platform APIs is built on flask python framework.
