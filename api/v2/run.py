@@ -1,7 +1,8 @@
-import os, sys
+import os
+import sys
 sys.path.insert(0, os.path.abspath(".."))
 
-from __init__ import *
+from __init__ import app
 
 from models import DatabaseModel
 

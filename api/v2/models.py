@@ -1,19 +1,16 @@
 import psycopg2
 
-class DatabaseModel(object):
+class DatabaseModel():
     #change the database connect args assignments to your corresponding values
-    connection=psycopg2.connect(dbname='mydiary', user='postgres', \
-            host='localhost', password='01071992',port="5432")
-    
-    
-    """this function gets called in the main function of the run.py files. It creates necessary tables for the project.
+    connection = psycopg2.connect(dbname='mydiary', user='postgres', \
+    host='localhost', password='01071992', port="5432")
+    """this function gets called in the main function of the run.py \
+    files. It creates necessary tables for the project.
     do not alter any sql statement here
     """
     def create_table():
-         
-        connection=DatabaseModel.connection        
-        
-        cursor=connection.cursor()
+        connection = DatabaseModel.connection        
+        cursor = connection.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS users  \
         (ID SERIAL PRIMARY KEY, name VARCHAR NOT NULL, \
         email VARCHAR NOT NULL,Username VARCHAR NOT NULL,\

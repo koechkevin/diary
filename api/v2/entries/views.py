@@ -1,17 +1,17 @@
 import datetime
-import os,sys
-sys.path.insert(0, os.path.abspath(".."))
 import jwt
+import os
+import sys
 
 from flask import jsonify, request, Flask, Blueprint, abort
+
+sys.path.insert(0, os.path.abspath(".."))
+
 from models import *
 from __init__ import *
 from flask_restful import Api, Resource
 from common import Common
 from functools import wraps
-
-
-
 
 apps = Blueprint("entries", __name__)
 api = Api(apps)
@@ -30,10 +30,9 @@ class CreateEntry(Resource):
         except KeyError:
             abort(422)
             message = 'provide title and entry to be saved'
-            
         if title.strip() == '' or entry.strip() == '':
             message = 'title and entry cannot be empty'
-        else:    
+        else:
             user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
             cursor = connection.cursor()
             sql = "insert into entries \
@@ -42,7 +41,6 @@ class CreateEntry(Resource):
             connection.commit()
             message = "entry was successfully saved"
         return jsonify(message)
-    
     #get all entries
     @Common.on_session
     def get(self):
@@ -53,14 +51,11 @@ class CreateEntry(Resource):
         cursor.execute(sql)
         result = cursor.fetchall()
         for each in result:
-            output.append([str(each[0]),each[1],each[2],str(each[4])])
-        connection.commit() 
+            output.append([str(each[0]), each[1], each[2], str(each[4])])
+        connection.commit()
         return jsonify(output)
-    
-    
 class EntryId(Resource):
-                
-     #modify an entry      
+     #modify an entry
     @Common.on_session
     def put(self, entry_id):
         try:
@@ -68,7 +63,7 @@ class EntryId(Resource):
             title = request.get_json()['title']
             entry = request.get_json()['entry']
         except KeyError:
-            return jsonify('provide new title and new entry to replace')            
+            return jsonify('provide new title and new entry to replace')    
         if title.strip() == '' or entry.strip() == '':
             return jsonify('title and entry cannot be empty')
         today = str(datetime.datetime.today()).split()
@@ -87,9 +82,8 @@ class EntryId(Resource):
             connection.commit()
             return jsonify("succesfully edited")
         return jsonify("you are out of session")
-     
      #delete an entry
-    @Common.on_session           
+    @Common.on_session
     def delete(self, entry_id):
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         cursor = connection.cursor()
@@ -105,7 +99,6 @@ class EntryId(Resource):
         cursor.execute(sql)
         connection.commit()
         return jsonify("delete successful")
-    
     #get one entry
     @Common.on_session
     def get(self, entry_id):
@@ -120,7 +113,6 @@ class EntryId(Resource):
             return jsonify("entry id "+str(entry_id)+" is \
             not part of your entries . you can only view your entries")
         connection.commit()
-        return  jsonify(result[0],result[1],result[2],result[4])        
-
+        return  jsonify(result[0], result[1], result[2], result[4])
 api.add_resource(CreateEntry, '/api/v2/entries')
 api.add_resource(EntryId, '/api/v2/entries/<int:entry_id>')

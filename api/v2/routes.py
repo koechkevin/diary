@@ -1,7 +1,7 @@
-from flask import Flask, request, Blueprint
+from flask import Blueprint, jsonify
 
 main = Blueprint("main", __name__)
 
 @main.route("/api/v2/", methods=['GET'])
 def home():
-    return "welcome to my diary", 200
+    return jsonify("welcome to my diary"), 200

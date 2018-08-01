@@ -1,26 +1,25 @@
-from flask import jsonify, request, Flask, Blueprint, make_response, abort
-from models import *
-from __init__ import *
-from functools import wraps
-from flask_restful import Api, Resource
-from common import Common
-
-import os,sys
-sys.path.insert(0, os.path.abspath(".."))
 import datetime
 import hashlib
 import re
 import base64
 import jwt
 
+from flask import jsonify, request, Flask, Blueprint, abort
+from models import *
+from __init__ import *
+from functools import wraps
+from flask_restful import Api, Resource
+from common import Common
+
+import os, sys
+sys.path.insert(0, os.path.abspath(".."))
+
 
 user = Blueprint("users", __name__)
 api = Api(user)
 
-
 connection = DatabaseModel.connection
 
-    
 class UserLogin(Resource):
     def post(self):
         try:
@@ -42,8 +41,7 @@ class UserLogin(Resource):
         connection.commit()
         token = jwt.encode(payload, app.secret_key)
         return jsonify({"token":token.decode('utf-8')})
- 
-class UserLogout(Resource):   
+class UserLogout(Resource):
     @Common.on_session
     def get(self):
         try:
@@ -57,7 +55,6 @@ class UserLogout(Resource):
             return jsonify("you have been successfully logged out.Token invalidated")
         except TypeError:
             return jsonify('you can only logout if you were logged in')
-        
 class UserRegister(Resource):
     def valid_password(self, password):
         if re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password):
@@ -80,7 +77,7 @@ class UserRegister(Resource):
             (bytes(data['cpassword'], 'utf-8'))).hexdigest()
         except KeyError:
             abort(422)
-            return jsonify('fname, lname, email, username, password, cpassword should be provided')         
+            return jsonify('fname, lname, email, username, password, cpassword should be provided')        
         if fname.strip() == '' or lname.strip() == '' or username.strip() == '':
             return jsonify('Fields cannot be empty')
         cursor = connection.cursor()
@@ -105,8 +102,7 @@ class UserRegister(Resource):
         cursor.execute(sql1)
         connection.commit()
         return jsonify({"message":"You registered succesfully"})
-        
-    @Common.on_session    
+    @Common.on_session
     def get(self):
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from users where id = "+str(user_id)+";"
@@ -119,7 +115,6 @@ class UserRegister(Resource):
         output = {"name":name, "email":email, "username":username, "ID":user_id}
         connection.commit()
         return jsonify(output)
-
 api.add_resource(UserLogin, '/api/v2/users/login')
 api.add_resource(UserLogout, '/api/v2/users/logout')
 api.add_resource(UserRegister, '/api/v2/users/register')
