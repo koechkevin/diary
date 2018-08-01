@@ -1,15 +1,18 @@
+"""this module contains functions for database connection and create tables for the application
+    """
 import psycopg2
 
 class DatabaseModel():
-    #change the database connect args assignments to your corresponding values
+    """this class contains database structure for the application
+    """
     connection = psycopg2.connect(dbname='mydiary', user='postgres', \
     host='localhost', password='01071992', port="5432")
-    """this function gets called in the main function of the run.py \
+    def create_table():
+        """this function gets called in the main function of the run.py \
     files. It creates necessary tables for the project.
     do not alter any sql statement here
     """
-    def create_table():
-        connection = DatabaseModel.connection        
+        connection = DatabaseModel.connection
         cursor = connection.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS users  \
         (ID SERIAL PRIMARY KEY, name VARCHAR NOT NULL, \

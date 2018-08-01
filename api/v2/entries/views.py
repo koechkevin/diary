@@ -1,3 +1,6 @@
+"""
+    module has routes for user to perform entry operations'
+    """
 import datetime
 import jwt
 import os
@@ -19,9 +22,14 @@ api = Api(apps)
 connection = DatabaseModel.connection
 
 class CreateEntry(Resource):
-    #create an entry
+    """
+    class for routes '/api/v2/entries'
+    """
     @Common.on_session
     def post(self):
+        """
+    method creates an entry'
+    """
         message = ''
         try:
             data = request.get_json()
@@ -44,6 +52,9 @@ class CreateEntry(Resource):
     #get all entries
     @Common.on_session
     def get(self):
+        """
+    method gets all entries a user on session has made'
+    """
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from entries where id = "+str(user_id)+";"
         cursor = connection.cursor()
@@ -55,15 +66,20 @@ class CreateEntry(Resource):
         connection.commit()
         return jsonify(output)
 class EntryId(Resource):
-     #modify an entry
+    """
+    class for routes /api/v2/entries/<int:entry_id>
+    """
     @Common.on_session
     def put(self, entry_id):
+        """
+    method modifies an entry
+    """
         try:
             user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
             title = request.get_json()['title']
             entry = request.get_json()['entry']
         except KeyError:
-            return jsonify('provide new title and new entry to replace')    
+            return jsonify('provide new title and new entry to replace')
         if title.strip() == '' or entry.strip() == '':
             return jsonify('title and entry cannot be empty')
         today = str(datetime.datetime.today()).split()
@@ -85,6 +101,9 @@ class EntryId(Resource):
      #delete an entry
     @Common.on_session
     def delete(self, entry_id):
+        """
+    method deletes an entry'
+    """
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         cursor = connection.cursor()
         sql1 = "select * from entries where entryid = "+str(entry_id)+";"
@@ -102,6 +121,9 @@ class EntryId(Resource):
     #get one entry
     @Common.on_session
     def get(self, entry_id):
+        """
+    method gets a single entry'
+    """
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from entries \
         where entryid = "+str(entry_id)+" and id = "+str(user_id)+";"

@@ -11,7 +11,8 @@ from functools import wraps
 from flask_restful import Api, Resource
 from common import Common
 
-import os, sys
+import os
+import sys
 sys.path.insert(0, os.path.abspath(".."))
 
 
@@ -21,7 +22,13 @@ api = Api(user)
 connection = DatabaseModel.connection
 
 class UserLogin(Resource):
+    """
+    A class for login function
+    """
     def post(self):
+        """
+    A registered user logs in
+    """
         try:
             username = request.get_json()['username']
             password = hashlib.sha256(base64.b64encode\
@@ -42,6 +49,9 @@ class UserLogin(Resource):
         token = jwt.encode(payload, app.secret_key)
         return jsonify({"token":token.decode('utf-8')})
 class UserLogout(Resource):
+    """
+    A logged in user logs out and have the token invalidated
+    """
     @Common.on_session
     def get(self):
         try:
@@ -56,11 +66,20 @@ class UserLogout(Resource):
         except TypeError:
             return jsonify('you can only logout if you were logged in')
 class UserRegister(Resource):
+    """
+    A class for registration and retrieval of user details
+    """
     def valid_password(self, password):
+        """
+    A function that checks validity of a user password on registration
+    """
         if re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password):
             return True
         return False
     def post(self):
+        """
+    A function that allows a user post credentials for registration
+    """
         try:
             connection.commit()
             data = request.get_json()
@@ -95,7 +114,7 @@ class UserRegister(Resource):
             abort(409)
             return jsonify("email or username already exists")
         elif password != confirm_password:
-                return jsonify({"message":"password and confirm password do not match"})
+            return jsonify({"message":"password and confirm password do not match"})
         elif not Common().valid_email(email):
             #abort(406)
             return jsonify("please enter a valid email")
@@ -104,6 +123,9 @@ class UserRegister(Resource):
         return jsonify({"message":"You registered succesfully"})
     @Common.on_session
     def get(self):
+        """
+    returns details of a user on session
+    """
         user_id = jwt.decode(request.headers.get('x-access-token'), app.secret_key)['user_id']
         sql = "select * from users where id = "+str(user_id)+";"
         cursor = connection.cursor()
