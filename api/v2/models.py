@@ -1,8 +1,7 @@
 """this module contains functions for database connection and create tables for the application
     """
-import psycopg2
 import os
-
+import psycopg2
 
 class DatabaseModel():
     """this class contains database structure for the application

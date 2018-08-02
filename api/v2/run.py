@@ -3,12 +3,13 @@ entry point for starting a server
 """
 import os
 import sys
-sys.path.insert(0, os.path.abspath(".."))
 
-from __init__ import app
+from __init__ import APP
 from models import DatabaseModel
+
+sys.path.insert(0, os.path.abspath(".."))
 
 if __name__ == '__main__':
     DatabaseModel.create_table()
-    app.run(port=5013, debug=True)
+    APP.run(port=5013, debug=True)
     

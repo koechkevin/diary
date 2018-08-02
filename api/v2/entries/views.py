@@ -1,25 +1,26 @@
 """
     module has routes for user to perform entry operations'
     """
-import datetime
-import jwt
 import os
 import sys
+import datetime
+import jwt
 
-from flask import jsonify, request, Flask, Blueprint, abort
+from flask import jsonify, request, Blueprint, abort
+
+from flask_restful import Api, Resource
+from models import DatabaseModel
+#from __init__ import *
+
+from common import Common
+
 
 sys.path.insert(0, os.path.abspath(".."))
 
-from models import *
-from __init__ import *
-from flask_restful import Api, Resource
-from common import Common
-from functools import wraps
+APPS = Blueprint("entries", __name__)
+API = Api(APPS)
 
-apps = Blueprint("entries", __name__)
-api = Api(apps)
-
-connection = DatabaseModel.connection
+CONNECTION = DatabaseModel.connection
 
 class CreateEntry(Resource):
     """
@@ -42,11 +43,11 @@ class CreateEntry(Resource):
             message = 'title and entry cannot be empty'
         else:
             user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
-            cursor = connection.cursor()
+            cursor = CONNECTION.cursor()
             sql = "insert into entries \
             (title,entry,id)values('"+title+"','"+entry+"','"+str(user_id)+"');"
             cursor.execute(sql)
-            connection.commit()
+            CONNECTION.commit()
             message = "entry was successfully saved"
         return jsonify({"message":message})
     #get all entries
@@ -57,13 +58,14 @@ class CreateEntry(Resource):
     """
         user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
         sql = "select * from entries where id = "+str(user_id)+";"
-        cursor = connection.cursor()
+        cursor = CONNECTION.cursor()
         output = {}
         cursor.execute(sql)
         result = cursor.fetchall()
         for each in result:
-            output.update({str(each[0]):{"title":each[1], "entry":each[2], "date created":str(each[4])}})
-        connection.commit()
+            output.update({str(each[0]):{"title":each[1], "entry":each[2], \
+            "date created":str(each[4])}})
+        CONNECTION.commit()
         return jsonify(output)
 class EntryId(Resource):
     """
@@ -84,7 +86,7 @@ class EntryId(Resource):
             return jsonify({"message":'title and entry cannot be empty'})
         today = str(datetime.datetime.today()).split()
         if Common().authorize(request.headers.get('x-access-token')):
-            cursor = connection.cursor()
+            cursor = CONNECTION.cursor()
             sqlcheck = "select * from entries where entryid="+str(entry_id)+";"
             cursor.execute(sqlcheck)
             result = cursor.fetchone()
@@ -95,7 +97,7 @@ class EntryId(Resource):
             sql = "UPDATE entries SET title=\
             '"+title+"',entry='"+entry+"'where entryID="+str(entry_id)+";"
             cursor.execute(sql)
-            connection.commit()
+            CONNECTION.commit()
             return jsonify({"message":"succesfully edited"})
         return jsonify({"message":"you are out of session"})
      #delete an entry
@@ -105,7 +107,7 @@ class EntryId(Resource):
     method deletes an entry'
     """
         user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
-        cursor = connection.cursor()
+        cursor = CONNECTION.cursor()
         sql1 = "select * from entries where entryid = "+str(entry_id)+";"
         sql = "delete from entries \
         where entryid = "+str(entry_id)+" and id = "+str(user_id)+";"
@@ -116,7 +118,7 @@ class EntryId(Resource):
         elif result[3] != user_id:
             return jsonify({"message":"you are not authorized to perform the operation"})
         cursor.execute(sql)
-        connection.commit()
+        CONNECTION.commit()
         return jsonify({"message":"delete successful"})
     #get one entry
     @Common.on_session
@@ -127,14 +129,14 @@ class EntryId(Resource):
         user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
         sql = "select * from entries \
         where entryid = "+str(entry_id)+" and id = "+str(user_id)+";"
-        cursor = connection.cursor()
+        cursor = CONNECTION.cursor()
         cursor.execute(sql)
         result = cursor.fetchone()
         if result is None:
             abort(401)
             return jsonify({"message":"entry id "+str(entry_id)+" is \
             not part of your entries . you can only view your entries"})
-        connection.commit()
+        CONNECTION.commit()
         return  jsonify({"message":[result[0], result[1], result[2], result[4]]})
-api.add_resource(CreateEntry, '/api/v2/entries')
-api.add_resource(EntryId, '/api/v2/entries/<int:entry_id>')
+API.add_resource(CreateEntry, '/api/v2/entries')
+API.add_resource(EntryId, '/api/v2/entries/<int:entry_id>')

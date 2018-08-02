@@ -3,9 +3,9 @@ The module initializes the home page route
 """
 from flask import Blueprint, jsonify
 
-main = Blueprint("main", __name__)
+MAIN = Blueprint("main", __name__)
 
-@main.route("/api/v2/", methods=['GET'])
+@MAIN.route("/api/v2/", methods=['GET'])
 def home():
     """
 The landing page route
