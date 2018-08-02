@@ -41,6 +41,7 @@ class TestUserLogin(unittest.TestCase):
     """
         response = self.APP.post('/api/v2/users/login', json={})
         self.assertEqual(response.status_code, 422)
+
 class TestUserLogout(unittest.TestCase):
     """
     test validity of logout function when wrong method provided
@@ -74,6 +75,7 @@ class TestRegister(unittest.TestCase):
     """
         with APP.test_client()as self.APP:
             response = self.APP.get('/api/v2/users/register')
+            self.assertEqual(response.get_json()["message"], "you are out of session")
             self.assertEqual(response.status_code, 200)
 if __name__ == '__main__':
     unittest.main()

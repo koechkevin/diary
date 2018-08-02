@@ -90,6 +90,8 @@ class EntryId(Resource):
             sqlcheck = "select * from entries where entryid="+str(entry_id)+";"
             cursor.execute(sqlcheck)
             result = cursor.fetchone()
+            if result is None:
+                return jsonify({"message":"this entry id is not in the database"})
             if result[3] != user_id:
                 return jsonify({"message":"you are not the author of this entry"})
             elif str(result[4]).split()[0] != today[0]:
