@@ -6,9 +6,9 @@ import unittest
 import os
 import sys
 
-from __init__ import APP
-
 sys.path.insert(0, os.path.abspath(".."))
+
+from __init__ import APP
 
 class TestCreateEntry(unittest.TestCase):
     """

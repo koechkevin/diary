@@ -5,10 +5,9 @@ import unittest
 import os
 import sys
 
-from common import Common
-
 sys.path.insert(0, os.path.abspath(".."))
 
+from common import Common
 
 from __init__ import APP
 
