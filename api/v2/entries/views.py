@@ -99,8 +99,10 @@ class EntryId(Resource):
             sql = "UPDATE entries SET title=\
             '"+title+"',entry='"+entry+"'where entryID="+str(entry_id)+";"
             cursor.execute(sql)
+            cursor.execute(sqlcheck)
+            result_set = cursor.fetchone()
             CONNECTION.commit()
-            return jsonify({"message":"succesfully edited"})
+            return  jsonify({"message":[result_set[0], result_set[1], result_set[2], result_set[4]]})
         return jsonify({"message":"you are out of session"})
      #delete an entry
     @Common.on_session
