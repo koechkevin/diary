@@ -4,12 +4,14 @@ test user functions
 import unittest
 import os
 import sys
+import psycopg2
+import json
 
 sys.path.insert(0, os.path.abspath(".."))
 
+from flask import jsonify
 from common import Common
-
-from __init__ import APP
+from run import APP
 
 class TestUsers(unittest.TestCase):
     """
@@ -21,7 +23,7 @@ class TestUsers(unittest.TestCase):
     """
         test = Common()
         self.assertFalse(test.authorize(''), False)
-        #self.assertTrue(test.authorize('qwsdfgiujhgfde'), True)
+        
     def test_valid_email(self):
         """
     test validity of an email
@@ -35,14 +37,28 @@ class TestUserLogin(unittest.TestCase):
     """
     def setUp(self):
         self.APP = APP.test_client()
+        
     def test_post(self):
         """
     test validity of login function when empty parameters provided
     """
-        response = self.APP.post('/api/v2/users/login', json={})
-        self.assertEqual(response.status_code, 422)
+        self.APP = APP.test_client()
+        response = self.APP.post('/api/v2/users/login', \
+        json={"username":"koechk", "password":""})
+        self.assertEqual(response.get_json()["message"], "invalid credentials")
+        self.assertEqual(response.status_code, 200)
 
 class TestUserLogout(unittest.TestCase):
+    def setUp(self):
+        self.APP = APP.test_client()
+        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
+                                                      "username":"test", \
+                                                      "password":"kev12345",\
+                                                      "lname":"kipkoech",\
+                                                      "cpassword":"kev12345",\
+                                                      "email":"tests@gmail.com"
+                                                      })        
+    
     """
     test validity of logout function when wrong method provided
     """
@@ -50,32 +66,75 @@ class TestUserLogout(unittest.TestCase):
         """
     test validity of logout function when wrong method provided
     """
-        self.APP = APP.test_client()
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        token = res.get_json()["token"]
         response = self.APP.post('/api/v2/users/logout')
         self.assertEqual(response.status_code, 405)
-        test = APP.test_client().get('/api/v2/logout').status_code
-        self.assertEqual(test, 404)
+        tester = APP.test_client().get('/api/v2/users/logout', headers={"x-access-token":token})
+        test = tester.status_code
+        self.assertEqual(test, 200)
+        self.assertEqual(tester.get_json()["message"], "you have been successfully logged out.Token invalidated")
+    
+    def tearDown(self):
+        DBNAME = os.getenv('DBNAME')
+        DBPWD = os.getenv('DBPWD')
+        DBUSER = os.getenv('DBUSER')
+        connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
+        host='localhost', password=DBPWD, port="5432")
+        cursor = connection.cursor()
+        cursor.execute("delete from users where username = 'test';")
+        connection.commit()        
 class TestRegister(unittest.TestCase):
+    def setUp(self):
+        self.APP = APP.test_client()
+        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
+                                                      "username":"test", \
+                                                      "password":"kev12345",\
+                                                      "lname":"kipkoech",\
+                                                      "cpassword":"kev12345",\
+                                                      "email":"tests@gmail.com"
+                                                      })                                          
     """
     test register and get account details
     """
+   
     def test_post(self):
         """
     test for wrong routes and wrong credentials provided on registration
-    """
+    """ 
         self.assertEqual\
-            (APP.test_client().get('/api/v2/users/register/').status_code, 404)
-        self.assertEqual(APP.test_client().post('/api/v2/users/register', json={\
-             "lname":"koech", "email":"kkkoech",\
-        "username":"kibitok", "password":"1234", "cpassword":\
-        "1234"}).status_code, 422)
+            (self.APP.get('/api/v2/users/register/').status_code, 404)
+        
+        self.assertEqual(\
+        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
+                                                      "username":"test", \
+                                                      "password":"kev12345",\
+                                                      "lname":"kipkoech",\
+                                                      "cpassword":"kev12345",\
+                                                      "email":"tests@gmail.com"
+                                                      }).status_code, 409)
+        
     def test_get(self):
         """
     test for status code when the get register function gets called.
     """
-        with APP.test_client()as self.APP:
-            response = self.APP.get('/api/v2/users/register')
-            self.assertEqual(response.get_json()["message"], "you are out of session")
-            self.assertEqual(response.status_code, 200)
+        resp = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        token = resp.get_json()["token"] 
+        print(token)
+        response = self.APP.get('/api/v2/users/register', headers = {'x-access-token':token})
+        self.assertEqual(response.get_json()["name"], "kibish kipkoech")
+        self.assertEqual(response.get_json()["username"], "test")
+        self.assertEqual(response.status_code, 200)
+
+    def tearDown(self):
+        DBNAME = os.getenv('DBNAME')
+        DBPWD = os.getenv('DBPWD')
+        DBUSER = os.getenv('DBUSER')
+        connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
+        host='localhost', password=DBPWD, port="5432")
+        cursor = connection.cursor()
+        cursor.execute("delete from users where username = 'test';")
+        connection.commit()
+
 if __name__ == '__main__':
     unittest.main()

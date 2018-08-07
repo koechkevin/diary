@@ -8,11 +8,12 @@ import hashlib
 import re
 import base64
 import jwt
+import json
 
 from flask import jsonify, request, Blueprint, abort
 from flask_restful import Api, Resource
 from models import *
-from __init__ import *
+#from __init__ import *
 #from functools import wraps
 from common import Common
 
@@ -89,6 +90,7 @@ class UserRegister(Resource):
         try:
             CONNECTION.commit()
             data = request.get_json()
+            print(request.headers.get("Content-Type"))
             fname = data['fname']
             lname = data['lname']
             email = data['email']
