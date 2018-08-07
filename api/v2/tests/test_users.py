@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath(".."))
 from flask import jsonify
 from common import Common
 from run import APP
+from models import *
 
 class TestUsers(unittest.TestCase):
     """
@@ -36,6 +37,7 @@ class TestUserLogin(unittest.TestCase):
     test validity of login function when empty parameters provided
     """
     def setUp(self):
+        DatabaseModel.create_table()
         self.APP = APP.test_client()
         
     def test_post(self):

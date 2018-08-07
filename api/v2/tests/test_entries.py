@@ -10,9 +10,11 @@ import psycopg2
 
 sys.path.insert(0, os.path.abspath(".."))
 from run import APP
+from models import *
 
 class TestCreateEntry(unittest.TestCase):
     def setUp(self):
+        DatabaseModel.create_table()
         self.APP = APP.test_client()
         self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
                                                       "username":"test", \
