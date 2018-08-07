@@ -14,36 +14,45 @@ from common import Common
 from run import APP
 from models import *
 
+def tear():
+    DBNAME = os.getenv('DBNAME')
+    DBPWD = os.getenv('DBPWD')
+    DBUSER = os.getenv('DBUSER')
+    connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
+    host='localhost', password=DBPWD, port="5432")
+    cursor = connection.cursor()
+    cursor.execute("delete from users where username = 'test';")
+    connection.commit()
+
+data = {"fname": "kibish",\
+        "username":"test", \
+        "password":"kev12345",\
+        "lname":"kipkoech",\
+        "cpassword":"kev12345",\
+        "email":"tests@gmail.com"\
+        }
+
 class TestUsers(unittest.TestCase):
-    """
-    test validity
-    """
+    #test validity
     def test_authorize(self):
-        """
-    test validity of a token
-    """
+        #test validity of a token
         test = Common()
         self.assertFalse(test.authorize(''), False)
         
     def test_valid_email(self):
-        """
-    test validity of an email
-    """
+        #test validity of an email
         test = Common()
         self.assertTrue(test.valid_email('koechkevin92@gmail.com'), True)
         self.assertFalse(test.valid_email('koechkevin92@gmailcom'), False)
+
 class TestUserLogin(unittest.TestCase):
-    """
-    test validity of login function when empty parameters provided
-    """
+    #test validity of login function when empty parameters provided
     def setUp(self):
         DatabaseModel.create_table()
         self.APP = APP.test_client()
         
     def test_post(self):
-        """
-    test validity of login function when empty parameters provided
-    """
+        #test validity of login function when empty parameters provided
         self.APP = APP.test_client()
         response = self.APP.post('/api/v2/users/login', \
         json={"username":"koechk", "password":""})
@@ -53,21 +62,10 @@ class TestUserLogin(unittest.TestCase):
 class TestUserLogout(unittest.TestCase):
     def setUp(self):
         self.APP = APP.test_client()
-        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
-                                                      "username":"test", \
-                                                      "password":"kev12345",\
-                                                      "lname":"kipkoech",\
-                                                      "cpassword":"kev12345",\
-                                                      "email":"tests@gmail.com"
-                                                      })        
+        self.APP.post('/api/v2/users/register', json=data)        
     
-    """
-    test validity of logout function when wrong method provided
-    """
     def test_get(self):
-        """
-    test validity of logout function when wrong method provided
-    """
+        #test validity of logout function when wrong method provided
         res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
         token = res.get_json()["token"]
         response = self.APP.post('/api/v2/users/logout')
@@ -78,49 +76,28 @@ class TestUserLogout(unittest.TestCase):
         self.assertEqual(tester.get_json()["message"], "you have been successfully logged out.Token invalidated")
     
     def tearDown(self):
-        DBNAME = os.getenv('DBNAME')
-        DBPWD = os.getenv('DBPWD')
-        DBUSER = os.getenv('DBUSER')
-        connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
-        host='localhost', password=DBPWD, port="5432")
-        cursor = connection.cursor()
-        cursor.execute("delete from users where username = 'test';")
-        connection.commit()        
+        tear()
+
 class TestRegister(unittest.TestCase):
     def setUp(self):
         self.APP = APP.test_client()
-        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
-                                                      "username":"test", \
-                                                      "password":"kev12345",\
-                                                      "lname":"kipkoech",\
-                                                      "cpassword":"kev12345",\
-                                                      "email":"tests@gmail.com"
-                                                      })                                          
-    """
-    test register and get account details
-    """
+        self.APP.post('/api/v2/users/register', json=data)                                          
    
     def test_post(self):
-        """
-    test for wrong routes and wrong credentials provided on registration
-    """ 
+        #test for wrong routes and wrong credentials provided on registration 
         self.assertEqual\
             (self.APP.get('/api/v2/users/register/').status_code, 404)
-        
         self.assertEqual(\
-        self.APP.post('/api/v2/users/register', json={"fname": "kibish",\
-                                                      "username":"test", \
-                                                      "password":"kev12345",\
-                                                      "lname":"kipkoech",\
-                                                      "cpassword":"kev12345",\
-                                                      "email":"tests@gmail.com"
-                                                      }).status_code, 409)
+        self.APP.post('/api/v2/users/register', json=data).status_code, 409)
+        self.assertEqual(\
+        self.APP.post('/api/v2/users/register', json={}).status_code, 422)
         
     def test_get(self):
-        """
-    test for status code when the get register function gets called.
-    """
-        resp = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        #test for status code when the get register function gets called.
+        resp = self.APP.post('/api/v2/users/login', json={\
+        "username":"test", \
+        "password":"kev12345"\
+        })
         token = resp.get_json()["token"] 
         print(token)
         response = self.APP.get('/api/v2/users/register', headers = {'x-access-token':token})
@@ -129,14 +106,7 @@ class TestRegister(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
-        DBNAME = os.getenv('DBNAME')
-        DBPWD = os.getenv('DBPWD')
-        DBUSER = os.getenv('DBUSER')
-        connection = psycopg2.connect(dbname=DBNAME, user=DBUSER, \
-        host='localhost', password=DBPWD, port="5432")
-        cursor = connection.cursor()
-        cursor.execute("delete from users where username = 'test';")
-        connection.commit()
+        tear()
 
 if __name__ == '__main__':
     unittest.main()
