@@ -90,7 +90,7 @@ class UserRegister(Resource):
         try:
             CONNECTION.commit()
             data = request.get_json()
-            print(request.headers.get("Content-Type"))
+            #print(request.headers.get("Content-Type"))
             fname = data['fname']
             lname = data['lname']
             email = data['email']
