@@ -6,27 +6,28 @@
   
   
 </div>
-    <link rel="stylesheet" type="text/css" href="sty.css">
+    <link rel="stylesheet" type="text/css" href="../static/sty.css">
     </head>
-    <body>
-        <div class="topnav">
-   <img src="myDiary.png" alt="logo" />        
+    <body onload="fetchIndex()">
+    <div class="topnav">
+   <img src="../static/myDiary.png" alt="logo" />        
   <a href="register.html">REGISTER</a>
   <a href="login.html">LOGIN</a>
   
 </div>
-        <div class = "welcome">
-        <h1><font color="white">
-                 Welcome to My Diary
+<div class = "welcome">
+        <h1>
+            <font color="white">
+            <div id="output"></div>
             </font>
-            </h1>
+        </h1>
             <form action="register.html"><button>Register</button></form><br>
             <form action="login.html"><button>Login</button></form>
-        </div>
+</div>
       
         <div class="footer">
   <p>© kk koech</p>
 </div>
-        <script src="/static/java.js"></script>
+        <script src="../static/index.js"></script>
     </body>
 </html>

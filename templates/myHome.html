@@ -5,25 +5,25 @@
 <title>Home Login
 </title>
 
-<link rel="stylesheet" type="text/css" href="sty.css">
+<link rel="stylesheet" type="text/css" href="../static/sty.css">
 </head>
 <body>
  <div class="topnav">
-   <img src="myDiary.png" alt="logo" />        
+   <img src="../static/myDiary.png" alt="logo" />        
   <a href="login.html">LOGOUT</a>
     
-     <a href="">ACCOUNT</a>
+     <a href="", onclick="fetchAccount()">ACCOUNT</a>
      <a href="entries.html">ENTRIES</a>
      </div>
     
 <div class="form">
     <P><h1>Make an Entry</h1></P>
 
-<form method="POST" action ="" id="regform">
+<form name="create", method="POST" id="regform", onsubmit="fetchNewEntry()">
 <input type="datetime-local" name="entry date" placeholder="DATE"><br><br>
-<textarea rows ="1" cols = "60" name ="entry" placeholder="Title" ></textarea><br>
+<textarea rows ="1" cols = "60" name ="title" placeholder="Title" ></textarea><br>
 <textarea rows ="10" cols = "60" name ="entry" placeholder="Type an entry" ></textarea><br><br>
-<button name="save">Save </button><br>  
+<button name="save" >Save </button><br>  
     </form>
 
 </div>
@@ -32,5 +32,6 @@
 <div class="footer">
   <p>© kk koech</p>
 </div>
+<script src="../static/index.js"></script> 
     </body>
 </html>
