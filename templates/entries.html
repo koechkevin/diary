@@ -3,57 +3,36 @@
     <head>
         <title>
         </title>
-        <link rel="stylesheet" type="text/css" href="sty.css">
+        <link rel="stylesheet" type="text/css" href="../static/sty.css">
         
     </head>
-    <body>
+    <body onload="fetchEntries()">
         <div class="topnav">
             <img src="../static/myDiary.png" alt="logo" />
-            <a href="login.html">LOGOUT</a>
-            <a href="register.html">ACCOUNT</a>
+            <a href="login.html" onclick="logout()">LOGOUT</a>
+            <a href="" onclick="fetchAccount()">ACCOUNT</a>
             <a href="myHome.html">NEW ENTRY</a>
         </div>
         <div class="form">
-        <p>
+        
             <table style="width:100%">
                 <tr>
-                    <th>Total entries :  1</th>
+                    <th id = "total"></th>
                     
                 </tr>
-            </table><p>
-        </div>
-        <div class="form">
-            <p>
-            <table style="width:100%">
-                <tr>
-                    <th>Entry ID</th>
-                    <th>Time</th>
-                    <th>Entry Title</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2018-15-07 12:00:46:12</td>
-                    <td>My First</td>
-                    <td><div id="myBtn">view </div><a href="">edit </a> <a href=""> delete</a></td>
-                    <div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p class="modalText">Cristiano Ronaldo 's transfer from Real Madrid to Juventus did not quite overshadow a thrilling World Cup Final between France and Croatia, but the Portuguese will now dominate the headlines the day after the Moscow final.
-
-Ronaldo is all set to complete his £88m move to Turin after nine years with Los Blancos and four Champions League titles.
-
-The Italians crave another European crown above everything else after rattling off seven straight Serie A titles.
-
-Juve plan to showcase Ronaldo's medical before officially unveiling the player after rubber stamping the biggest transfer of the summer.</p>
-  </div>
-
-</div>
-                </tr>
-                
-                
             </table>
         </div>
-        <script src="../static/java.js"></script>
+        <div class="tableform" id="tableform">
+            
+        </div>
+        <div id="myModal" class="modal">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <p class="modalText" id ="single"></p>
+                  <div id="editor"></div>
+                </div>
+        </div>
+        
+        <script src="../static/index.js"></script>
     </body>
 </html>

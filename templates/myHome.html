@@ -7,10 +7,10 @@
 
 <link rel="stylesheet" type="text/css" href="../static/sty.css">
 </head>
-<body>
+<body onload="onload()">
  <div class="topnav">
    <img src="../static/myDiary.png" alt="logo" />        
-  <a href="login.html">LOGOUT</a>
+  <a href="login.html" onclick="logout()">LOGOUT</a>
     
      <a href="", onclick="fetchAccount()">ACCOUNT</a>
      <a href="entries.html">ENTRIES</a>
@@ -18,12 +18,15 @@
     
 <div class="form">
     <P><h1>Make an Entry</h1></P>
-
+    <p id="regstatus"></p>
+    <p id="success"></p>
 <form name="create", method="POST" id="regform", onsubmit="fetchNewEntry()">
-<input type="datetime-local" name="entry date" placeholder="DATE"><br><br>
-<textarea rows ="1" cols = "60" name ="title" placeholder="Title" ></textarea><br>
-<textarea rows ="10" cols = "60" name ="entry" placeholder="Type an entry" ></textarea><br><br>
-<button name="save" >Save </button><br>  
+<!--<input type="datetime-local" name="entry date" placeholder="DATE"><br><br>-->
+<div id = "entryForm">
+<textarea maxlength="20" rows ="1" cols = "33" name ="title" placeholder="Title" ></textarea><br>
+<textarea rows ="10" cols = "33" name ="entry" placeholder="Type an entry" ></textarea><br><br>
+<button name="save" >Save </button><br>
+</div> 
     </form>
 
 </div>
