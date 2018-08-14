@@ -26,9 +26,9 @@ def tear():
 
 data = {"fname": "kibish",\
         "username":"test", \
-        "password":"kev12345",\
+        "password":"Kev12345",\
         "lname":"kipkoech",\
-        "cpassword":"kev12345",\
+        "cpassword":"Kev12345",\
         "email":"tests@gmail.com"\
         }
 
@@ -41,7 +41,7 @@ class TestCreateEntry(unittest.TestCase):
  
     def test_post(self):
         #test return status code for no provided token
-        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"Kev12345"})
         token = res.get_json()["token"]
         response = self.APP.post('/api/v2/entries', headers = {"x-access-token":token},\
         json={"title":"test", "entry":"successful"})
@@ -50,7 +50,7 @@ class TestCreateEntry(unittest.TestCase):
 
     def test_get(self):
         #test message when no token provided
-        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"Kev12345"})
         token = res.get_json()["token"]
         response = self.APP.get('/api/v2/entries')
         self.assertEqual(response.status_code, 200)
@@ -68,7 +68,7 @@ class TestEntryId(unittest.TestCase):
 
     def test_put(self):
         #test wrong method modification
-        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"Kev12345"})
         token = res.get_json()["token"]        
         modify = self.APP.post\
         ('/api/v2/entries/3', json={"title":"test","entry":"successful" }).status_code
@@ -86,7 +86,7 @@ class TestEntryId(unittest.TestCase):
 
     def test_get(self):
         #test succesful response
-        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"Kev12345"})
         token = res.get_json()["token"]
         self.assertEqual(self.APP.get('/api/v2/entries/8').get_json()["message"], "you are out of session")
         response = self.APP.get('/api/v2/entries/8p', headers = {"x-access-token":token})

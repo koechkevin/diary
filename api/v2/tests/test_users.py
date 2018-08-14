@@ -26,9 +26,9 @@ def tear():
 
 data = {"fname": "kibish",\
         "username":"test", \
-        "password":"kev12345",\
+        "password":"Kev12345",\
         "lname":"kipkoech",\
-        "cpassword":"kev12345",\
+        "cpassword":"Kev12345",\
         "email":"tests@gmail.com"\
         }
 
@@ -66,7 +66,7 @@ class TestUserLogout(unittest.TestCase):
     
     def test_get(self):
         #test validity of logout function when wrong method provided
-        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"kev12345"})
+        res = self.APP.post('/api/v2/users/login', json={"username":"test", "password":"Kev12345"})
         token = res.get_json()["token"]
         response = self.APP.post('/api/v2/users/logout')
         self.assertEqual(response.status_code, 405)
@@ -96,7 +96,7 @@ class TestRegister(unittest.TestCase):
         #test for status code when the get register function gets called.
         resp = self.APP.post('/api/v2/users/login', json={\
         "username":"test", \
-        "password":"kev12345"\
+        "password":"Kev12345"\
         })
         token = resp.get_json()["token"] 
         print(token)

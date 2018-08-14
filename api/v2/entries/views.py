@@ -61,12 +61,13 @@ class CreateEntry(Resource):
         cursor = CONNECTION.cursor()
         output = {}
         cursor.execute(sql)
+        CONNECTION.commit()
         result = cursor.fetchall()
         for each in result:
-            output.update({str(each[0]):{"title":each[1], "entry":each[2], \
-            "date created":str(each[4])}})
-        CONNECTION.commit()
-        return jsonify(output)
+            output.update({str(each[0]):{"ID":str(each[0]),"title":each[1], "entry":each[2], \
+            "date created":each[4]}})
+        #CONNECTION.commit()
+        return jsonify({"message":output})
 class EntryId(Resource):
     """
     class for routes /api/v2/entries/<int:entry_id>
@@ -102,7 +103,7 @@ class EntryId(Resource):
             cursor.execute(sqlcheck)
             result_set = cursor.fetchone()
             CONNECTION.commit()
-            return  jsonify({"message":[result_set[0], result_set[1], result_set[2], result_set[4]]})
+            return  jsonify({"message":"Edited successfully"})
         return jsonify({"message":"you are out of session"})
      #delete an entry
     @Common.on_session

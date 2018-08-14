@@ -10,4 +10,4 @@ def home():
     """
 The landing page route
 """
-    return jsonify({"message":"welcome to my diary"}), 200
+    return jsonify({"message":"welcome to my diary. This is it!"}), 200

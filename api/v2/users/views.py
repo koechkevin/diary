@@ -48,7 +48,7 @@ class UserLogin(Resource):
         if result is None:
             return jsonify({"message":"invalid credentials"})
         payload = {"user_id":result[0], "username":username, \
-                 "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}
+                 "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=1500)}
         CONNECTION.commit()
         token = jwt.encode(payload, 'koech')
         return jsonify({"token":token.decode('utf-8')})
@@ -80,7 +80,7 @@ class UserRegister(Resource):
         """
     A function that checks validity of a user password on registration
     """
-        if re.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password):
+        if re.match("(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$", password):
             return True
         return False
     def post(self):
@@ -88,7 +88,7 @@ class UserRegister(Resource):
     A function that allows a user post credentials for registration
     """
         try:
-            CONNECTION.commit()
+            #CONNECTION.commit()
             data = request.get_json()
             #print(request.headers.get("Content-Type"))
             fname = data['fname']
@@ -97,8 +97,8 @@ class UserRegister(Resource):
             username = data['username']
             raw_pass = data['password']
             if not UserRegister().valid_password(raw_pass):
-                return jsonify({'password should be 8 characters \
-                long with both numbers and letters'})
+                return jsonify({"message"\
+                :'password should be at least 8 characters long with atleast one number, one special char, one uppercase & lowercase letters'})
             password = hashlib.sha256(base64.b64encode\
             (bytes(raw_pass, 'utf-8'))).hexdigest()
             confirm_password = hashlib.sha256(base64.b64encode\
