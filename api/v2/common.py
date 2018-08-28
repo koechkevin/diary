@@ -20,9 +20,11 @@ class contains all required methods
         """
 method checks if a user has been logged out or has been blacklisted
 """
+
         output = True
         if token is None or token.strip() == '':
             return False
+        CONNECTION.rollback()    
         sql = "select token from blacklist where token='"+token+"';"
         cursor = CONNECTION.cursor()
         cursor.execute(sql)

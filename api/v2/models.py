@@ -25,7 +25,7 @@ class DatabaseModel():
         registerdate TIMESTAMP default current_timestamp);")
         cursor.execute("create table if not exists entries \
         (entryID SERIAL PRIMARY KEY, title varchar NOT NULL, \
-        entry text NOT NULL,ID int NOT NULL, \
+        entry varchar NOT NULL,ID int NOT NULL, \
         time TIMESTAMP default current_timestamp);")
         cursor.execute("create table IF NOT EXISTS blacklist \
         (token varchar PRIMARY KEY NOT NULL,time\

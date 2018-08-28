@@ -45,8 +45,8 @@ class CreateEntry(Resource):
             user_id = jwt.decode(request.headers.get('x-access-token'), 'koech')['user_id']
             cursor = CONNECTION.cursor()
             sql = "insert into entries \
-            (title,entry,id)values('"+title+"','"+entry+"','"+str(user_id)+"');"
-            cursor.execute(sql)
+            (title,entry,id)values(%s,%s,%s);"
+            cursor.execute(sql,(title,entry,str(user_id)))
             CONNECTION.commit()
             message = "entry was successfully saved"
         return jsonify({"message":message})
@@ -98,8 +98,8 @@ class EntryId(Resource):
             elif str(result[4]).split()[0] != today[0]:
                 return jsonify({"message":"you can only modify an entry created today"})
             sql = "UPDATE entries SET title=\
-            '"+title+"',entry='"+entry+"'where entryID="+str(entry_id)+";"
-            cursor.execute(sql)
+            %s,entry=%s where entryID=%s;"
+            cursor.execute(sql,(title, entry, str(entry_id)))
             cursor.execute(sqlcheck)
             result_set = cursor.fetchone()
             CONNECTION.commit()
