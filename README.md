@@ -8,7 +8,7 @@ you can find the documentation here https://diary8.docs.apiary.io/
 
 ### Set up the environment
 This platform APIs is built on flask python framework.
-You must have python installed preferably version 3 and have PostgreSQL installed to test the files
+You must have python installed preferably version 3 and have PostgreSQL installed to test the files.
 
 Clone the repository and checkout to branch challenge3
 ```sh
@@ -39,13 +39,20 @@ set DBNAME=your database name
 set DBUSER=your username on your host
 
 set DBPWD=your password
+
+set DBHOST=your host e.g localhost
+
+N/B you can use export in place of set
 ```
 ### Run the application
 
 ```sh
 python api\v2\run.py
+
 ```
-and test the endpoints on postman. The links are provided here [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2c5b74363b5b33a5c0ad)
+if you have python 2 and 3 installed, use pip3 instead of pip and python3 instead of python
+
+Test the endpoints on postman. The links are provided here [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2c5b74363b5b33a5c0ad)
 ### APIs Endpoints
 
 **`GET "/api/v2"`** *home page*
