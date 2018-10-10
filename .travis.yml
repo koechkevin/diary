@@ -1,0 +1,16 @@
+language: python
+
+python:
+  -'3.4'
+  -'3.6'
+
+install:
+  - pip install r requirements.txt
+  - pip install python-coveralls
+  - pip install coverage
+  - pip install nose
+scripts:
+  - python test_my_diary.py
+  - nosetests --with-coverage
+after_success:
+  - coveralls
